@@ -28,6 +28,11 @@ return [
         'guest_limit' => 'Too many new usernames were used from your connection, please try again later.',
     ],
 
+    'identity' => [
+        'voting_as' => 'You are voting as',
+        'change' => 'Change',
+    ],
+
     'votes' => 'You have voted :count time this month.|You have voted :count times this month.',
 
     'server' => 'Choose the server on which to receive the reward.',

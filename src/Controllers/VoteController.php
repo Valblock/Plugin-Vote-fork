@@ -28,12 +28,17 @@ class VoteController extends Controller
         $queryName = ($gameId = $request->input('uid')) !== null
             ? User::where('game_id', $gameId)->value('name')
             : $request->input('user', '');
+        $guestName = $user === null && ! setting('vote.auth-required', false) && ! $queryName
+            ? $request->session()->get('vote.name')
+            : null;
         $votesCount = $user !== null ? $this->getVotesCount($user) : -1;
         $goalTarget = (int) setting('vote.goal.target', -1);
         $goalProgress = $goalTarget > 0 ? Vote::getGoalProgress() : 0;
 
         return view('vote::index', [
-            'name' => $queryName,
+            'name' => $queryName ?: $guestName,
+            'guestName' => $guestName,
+            'guestVoting' => ! setting('vote.auth-required', false),
             'user' => $request->user(),
             'request' => $request,
             'sites' => Site::enabled()->with('rewards')->get(),
@@ -89,6 +94,10 @@ class VoteController extends Controller
         $goalTarget = (int) setting('vote.goal.target', -1);
         $goalProgress = $goalTarget > 0 ? Vote::getGoalProgress() : 0;
 
+        if ($request->user() === null) {
+            $request->session()->put('vote.name', $user->name);
+        }
+
         return response()->json([
             'sites' => $sites,
             'votes' => $this->getVotesCount($user),
@@ -98,6 +107,13 @@ class VoteController extends Controller
                 'text' => trans('vote::messages.goal', ['current' => $goalProgress, 'target' => $goalTarget]),
             ],
         ]);
+    }
+
+    public function forgetUser(Request $request)
+    {
+        $request->session()->forget('vote.name');
+
+        return response()->noContent();
     }
 
     public function vote()

@@ -28,6 +28,11 @@ return [
         'guest_limit' => 'Trop de nouveaux pseudos ont été utilisés depuis votre connexion, réessayez plus tard.',
     ],
 
+    'identity' => [
+        'voting_as' => 'Vous votez en tant que',
+        'change' => 'Changer',
+    ],
+
     'votes' => 'Vous avez voté :count fois ce mois-ci.',
 
     'server' => 'Choisissez le serveur sur lequel recevoir la récompense.',

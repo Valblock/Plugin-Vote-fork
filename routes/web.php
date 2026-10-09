@@ -17,5 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [VoteController::class, 'index'])->name('home');
 Route::get('/user/{user}', [VoteController::class, 'verifyUser'])->name('verify-user');
+Route::delete('/user', [VoteController::class, 'forgetUser'])->name('forget-user');
 Route::post('/site/{site}', [VoteController::class, 'vote'])->name('vote');
 Route::post('/site/{site}/done', [VoteController::class, 'done'])->name('done')->middleware('throttle:15,1');

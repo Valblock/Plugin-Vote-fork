@@ -11,7 +11,19 @@
                 <div class="spinner-border text-white" role="status"></div>
             </div>
 
-            <div class="@auth d-none @endauth" data-vote-step="1">
+            @guest
+                @if($guestVoting)
+                    <div id="vote-identity" class="@unless($guestName) d-none @endunless mb-3" data-forget-url="{{ route('vote.forget-user') }}">
+                        {{ trans('vote::messages.identity.voting_as') }}
+                        <strong data-vote-identity-name>{{ $guestName }}</strong>
+                        <button type="button" class="btn btn-link btn-sm" id="vote-change-name">
+                            <i class="bi bi-pencil"></i> {{ trans('vote::messages.identity.change') }}
+                        </button>
+                    </div>
+                @endif
+            @endguest
+
+            <div class="@if(auth()->check() || $guestName) d-none @endif" data-vote-step="1">
                 <form class="row justify-content-center" action="{{ route('vote.verify-user', '/') }}" id="voteNameForm">
                     @if(!$authRequired)
                         <div class="col-md-6 col-lg-4">
@@ -39,7 +51,7 @@
                 </form>
             </div>
 
-            <div class="@guest d-none @endguest h-100" data-vote-step="2">
+            <div class="@if(auth()->guest() && ! $guestName) d-none @endif h-100" data-vote-step="2">
                 @forelse($sites as $site)
                     <a class="btn btn-primary" href="{{ $site->url }}" target="_blank" rel="noopener noreferrer"
                        data-vote-id="{{ $site->id }}"

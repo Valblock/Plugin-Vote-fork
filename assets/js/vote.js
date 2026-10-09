@@ -81,10 +81,61 @@ function updateGoalProgress(goal) {
     }
 }
 
+function showVoteIdentity(name) {
+    const identity = document.getElementById('vote-identity');
+
+    if (!identity) {
+        return;
+    }
+
+    identity.querySelector('[data-vote-identity-name]').textContent = name;
+    identity.classList.remove('d-none');
+}
+
+function resetVote() {
+    voteDoneCallbacks.forEach(function (callback) {
+        callback();
+    });
+    voteDoneCallbacks.length = 0;
+
+    document.querySelectorAll('[data-vote-url]').forEach(function (el) {
+        el.classList.remove('disabled');
+        el.removeAttribute('data-vote-time');
+        el.querySelector('.vote-timer').innerText = '';
+
+        if (el.dataset['voteHref']) {
+            el.setAttribute('href', el.dataset['voteHref']);
+        }
+    });
+
+    window.username = undefined;
+
+    const identity = document.getElementById('vote-identity');
+
+    if (identity) {
+        identity.classList.add('d-none');
+    }
+
+    clearVoteAlert();
+    toggleStep(1);
+
+    const input = document.getElementById('stepNameInput');
+
+    if (input) {
+        input.focus();
+        input.select();
+    }
+}
+
 function initVote() {
     document.querySelectorAll('[data-vote-url]').forEach(function (el) {
         const voteTime = el.dataset['voteTime'];
-        const url = el.getAttribute('href');
+
+        if (!el.dataset['voteHref']) {
+            el.dataset['voteHref'] = el.getAttribute('href');
+        }
+
+        const url = el.dataset['voteHref'];
 
         if (voteTime && voteTime > Date.now()) {
             el.classList.add('disabled');
@@ -145,6 +196,7 @@ function setupVoteTimers(name) {
 
             const sites = response.data.sites;
             window.username = name;
+            showVoteIdentity(name);
 
             for (let id in sites) {
                 const el = document.querySelector('[data-vote-id="' + id + '"]');
@@ -159,6 +211,10 @@ function setupVoteTimers(name) {
             initVote();
         })
         .catch(function (error) {
+            if (!window.username) {
+                toggleStep(1);
+            }
+
             catchVoteError(error);
         })
         .finally(function () {
@@ -249,6 +305,22 @@ function showServerSelect(baseURL, servers) {
     toggleStep('server')
 }
 
+const voteChangeName = document.getElementById('vote-change-name');
+
+if (voteChangeName) {
+    voteChangeName.addEventListener('click', function () {
+        const identity = document.getElementById('vote-identity');
+
+        axios.delete(identity.dataset['forgetUrl']).catch(function (error) {
+            console.error(error);
+        });
+
+        resetVote();
+    });
+}
+
 if (window.username) {
     initVote();
+} else if (window.voteGuestName && voteNameForm) {
+    setupVoteTimers(window.voteGuestName);
 }
