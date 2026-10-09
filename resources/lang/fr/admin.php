@@ -19,6 +19,8 @@ return [
         'ip_compatibility' => 'Activer la compatibilité IPv6',
         'ip_compatibility_info' => 'Cette option permet de corriger les votes qui ne se vérifient pas sur les sites de vote n\'acceptent pas l\'IPv6 alors que votre site oui, ou inversement.',
         'auth_required' => 'Obliger les utilisateurs à être connectés sur le site pour voter',
+        'guest_accounts' => 'Créer un compte pour les pseudos inconnus',
+        'guest_accounts_info' => 'Les joueurs peuvent voter avec n\'importe quel pseudo valide sans s\'inscrire. Un compte sans email est créé à leur premier vote, qu\'ils récupèrent ensuite en s\'inscrivant avec le même pseudo : leurs votes et leur argent sont conservés. Sans effet si la connexion est obligatoire.',
         'commands' => 'Commandes globales',
     ],
 

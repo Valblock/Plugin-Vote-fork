@@ -39,6 +39,14 @@
                 </div>
 
                 <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="guestAccounts" name="guest_accounts" @checked($guestAccounts) aria-describedby="guestAccountsLabel">
+                        <label class="form-check-label" for="guestAccounts">{{ trans('vote::admin.settings.guest_accounts') }}</label>
+                    </div>
+                    <div id="guestAccountsLabel" class="form-text">{{ trans('vote::admin.settings.guest_accounts_info') }}</div>
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label">{{ trans('vote::admin.settings.commands') }}</label>
 
                     @include('admin.elements.list-input', ['name' => 'commands', 'values' => $commands])

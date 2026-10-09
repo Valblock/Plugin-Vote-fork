@@ -8,6 +8,7 @@ use Azuriom\Models\User;
 use Azuriom\Plugin\Vote\Models\Reward;
 use Azuriom\Plugin\Vote\Models\Site;
 use Azuriom\Plugin\Vote\Models\Vote;
+use Azuriom\Plugin\Vote\Support\GuestAccounts;
 use Azuriom\Plugin\Vote\Verification\VoteChecker;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -62,6 +63,14 @@ class VoteController extends Controller
         // Find user by name only if user is not currently authenticated.
         $user ??= User::firstWhere('name', $name);
 
+        if ($user === null && GuestAccounts::enabled()) {
+            if (($error = GuestAccounts::validateName($name)) !== null) {
+                return response()->json(['message' => $error], 422);
+            }
+
+            $user = GuestAccounts::pending($name);
+        }
+
         if ($user === null) {
             return response()->json([
                 'message' => trans('vote::messages.errors.user'),
@@ -103,7 +112,22 @@ class VoteController extends Controller
         $user = $request->user();
 
         if ($user === null && ! setting('vote.auth-required', false)) {
-            $user = User::firstWhere('name', $request->input('user'));
+            $name = $request->input('user');
+            $user = User::firstWhere('name', $name);
+
+            if ($user === null && GuestAccounts::enabled() && GuestAccounts::validateName($name) === null) {
+                try {
+                    $user = GuestAccounts::findOrCreate($name, $request->ip());
+                } catch (LockTimeoutException) {
+                    return response()->json(['status' => 'pending']);
+                }
+
+                if ($user === null) {
+                    return response()->json([
+                        'message' => trans('vote::messages.errors.guest_limit'),
+                    ], 429);
+                }
+            }
         }
 
         abort_if($user === null, 401);

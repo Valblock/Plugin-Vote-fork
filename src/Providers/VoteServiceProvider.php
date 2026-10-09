@@ -6,6 +6,8 @@ use Azuriom\Extensions\Plugin\BasePluginServiceProvider;
 use Azuriom\Models\ActionLog;
 use Azuriom\Models\Permission;
 use Azuriom\Plugin\Vote\Commands\MonthlyRewardsCommand;
+use Azuriom\Plugin\Vote\Commands\PruneGuestsCommand;
+use Azuriom\Plugin\Vote\Middleware\ClaimGuestAccount;
 use Azuriom\Plugin\Vote\Models\Reward;
 use Azuriom\Plugin\Vote\Models\Site;
 use Illuminate\Console\Scheduling\Schedule;
@@ -54,7 +56,11 @@ class VoteServiceProvider extends BasePluginServiceProvider
             $this->registerSchedule();
         }
 
-        $this->commands(MonthlyRewardsCommand::class);
+        $this->commands([MonthlyRewardsCommand::class, PruneGuestsCommand::class]);
+
+        $router = $this->app['router'];
+        $router->pushMiddlewareToGroup('web', ClaimGuestAccount::class);
+        $router->pushMiddlewareToGroup('api', ClaimGuestAccount::class);
     }
 
     /**
@@ -63,6 +69,7 @@ class VoteServiceProvider extends BasePluginServiceProvider
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('vote:rewards')->monthly();
+        $schedule->command('vote:prune-guests')->daily();
     }
 
     /**

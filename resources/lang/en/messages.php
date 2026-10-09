@@ -25,6 +25,7 @@ return [
         'site' => 'No voting site is available currently.',
         'delay' => 'You already voted, you can vote again in :time.',
         'auth' => 'You must be logged in to vote.',
+        'guest_limit' => 'Too many new usernames were used from your connection, please try again later.',
     ],
 
     'votes' => 'You have voted :count time this month.|You have voted :count times this month.',

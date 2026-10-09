@@ -1,16 +1,16 @@
 {
     "id": "vote",
-    "name": "Vote",
-    "description": "Grow your community by rewarding users who vote for your server on external listing platforms.",
-    "version": "1.2.11",
-    "url": "https://market.azuriom.com/resources/2",
+    "name": "Vote [Valblock]",
+    "description": "Vote plugin with guest voting: players vote with their username without registering, and keep their votes when they create their account.",
+    "version": "1.2.12-valblock.1",
+    "url": "https://github.com/Valblock/Plugin-Vote-fork",
     "authors": [
-        "Azuriom"
+        "Azuriom",
+        "Valblock"
     ],
     "azuriom_api": "1.0.0",
     "providers": [
         "\\Azuriom\\Plugin\\Vote\\Providers\\VoteServiceProvider",
         "\\Azuriom\\Plugin\\Vote\\Providers\\RouteServiceProvider"
-    ],
-    "apiId": 2
+    ]
 }

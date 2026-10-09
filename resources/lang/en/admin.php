@@ -19,6 +19,8 @@ return [
         'ip_compatibility' => 'Enable IPv4/IPv6 compatibility',
         'ip_compatibility_info' => 'This option allows you to correct votes that are not verified on voting sites that don\'t accept IPv6 while your site does, or vice versa.',
         'auth_required' => 'Require users to be logged in to vote',
+        'guest_accounts' => 'Create an account for unknown usernames',
+        'guest_accounts_info' => 'Players can vote with any valid username without registering. An account without email is created on their first vote, and they can claim it later by registering with the same username: their votes and money are kept. Has no effect when login is required.',
         'commands' => 'Global commands',
     ],
 

@@ -25,6 +25,7 @@ return [
         'site' => 'Aucun site de vote n\'est disponible pour le moment.',
         'delay' => 'Vous avez déjà voté, vous pouvez voter à nouveau dans :time.',
         'auth' => 'Vous devez être connecté sur le site pour pouvoir voter.',
+        'guest_limit' => 'Trop de nouveaux pseudos ont été utilisés depuis votre connexion, réessayez plus tard.',
     ],
 
     'votes' => 'Vous avez voté :count fois ce mois-ci.',
