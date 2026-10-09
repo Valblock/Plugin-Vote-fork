@@ -39,6 +39,25 @@
     </div>
 </div>
 
+@if(\Azuriom\Plugin\Vote\Models\Reward::ticketdorAvailable())
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label class="form-label" for="ticketdorTicketsInput">{{ trans('vote::admin.rewards.ticketdor_tickets') }}</label>
+
+            <div class="input-group @error('ticketdor_tickets') has-validation @enderror">
+                <input type="number" min="0" max="1000" step="1" class="form-control @error('ticketdor_tickets') is-invalid @enderror" id="ticketdorTicketsInput" name="ticketdor_tickets" value="{{ old('ticketdor_tickets', $reward->ticketdor_tickets ?? '') }}" aria-describedby="ticketdorTicketsInfo">
+                <div class="input-group-text"><i class="bi bi-ticket-perforated"></i></div>
+
+                @error('ticketdor_tickets')
+                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                @enderror
+            </div>
+
+            <div id="ticketdorTicketsInfo" class="form-text">{{ trans('vote::admin.rewards.ticketdor_tickets_info') }}</div>
+        </div>
+    </div>
+@endif
+
 <div class="row">
     <div class="col-md-6 mb-3">
         <label class="form-label" for="serversSelect">{{ trans('vote::messages.fields.servers') }}</label>

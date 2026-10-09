@@ -31,6 +31,7 @@ class RewardRequest extends FormRequest
             'servers.*' => ['required', 'exists:servers,id'],
             'chances' => ['required', 'numeric', 'between:0,100'],
             'money' => ['nullable', 'numeric', 'min:0'],
+            'ticketdor_tickets' => ['nullable', 'integer', 'min:0', 'max:1000'],
             'need_online' => ['filled', 'boolean'],
             'single_server' => ['filled', 'boolean'],
             'commands' => ['sometimes', 'nullable', 'array'],
@@ -48,6 +49,10 @@ class RewardRequest extends FormRequest
 
         if (! $this->filled('money')) {
             $this->merge(['money' => 0]);
+        }
+
+        if (! $this->filled('ticketdor_tickets')) {
+            $this->merge(['ticketdor_tickets' => 0]);
         }
 
         $rewards = array_filter($this->input('monthly_rewards', []));

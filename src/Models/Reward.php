@@ -8,8 +8,11 @@ use Azuriom\Models\Traits\HasTablePrefix;
 use Azuriom\Models\Traits\Loggable;
 use Azuriom\Models\Traits\Searchable;
 use Azuriom\Models\User;
+use Azuriom\Plugin\Ticketdor\Models\Ticket;
+use Azuriom\Plugin\Ticketdor\Support\Tickets;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -17,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $image
  * @property float $chances
  * @property int|null $money
+ * @property int $ticketdor_tickets
  * @property bool $need_online
  * @property string[] $commands
  * @property int[] $monthly_rewards
@@ -47,7 +51,7 @@ class Reward extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'image', 'chances', 'money', 'commands', 'monthly_rewards',
+        'name', 'image', 'chances', 'money', 'ticketdor_tickets', 'commands', 'monthly_rewards',
         'need_online', 'single_server', 'is_enabled',
     ];
 
@@ -57,6 +61,7 @@ class Reward extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'ticketdor_tickets' => 'integer',
         'commands' => 'array',
         'monthly_rewards' => 'array',
         'need_online' => 'boolean',
@@ -98,6 +103,8 @@ class Reward extends Model
             $user->addMoney($this->money);
         }
 
+        $this->giveTicketdorTickets($user);
+
         $commands = $this->commands ?? [];
 
         if ($globalCommands = setting('vote.commands')) {
@@ -115,6 +122,23 @@ class Reward extends Model
         foreach ($servers ?? $this->servers as $server) {
             $server->bridge()->sendCommands($commands, $user, $this->need_online);
         }
+    }
+
+    public static function ticketdorAvailable(): bool
+    {
+        return plugins()->isEnabled('ticketdor')
+            && method_exists(Tickets::class, 'award');
+    }
+
+    private function giveTicketdorTickets(User $user): void
+    {
+        if ($this->ticketdor_tickets <= 0 || ! static::ticketdorAvailable()) {
+            return;
+        }
+
+        Tickets::award($user, $this->ticketdor_tickets, Ticket::SOURCE_VOTE, [
+            'note' => Str::limit($this->name, 250),
+        ]);
     }
 
     /**
