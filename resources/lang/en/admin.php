@@ -75,7 +75,6 @@ return [
         'enable' => 'Enable the reward',
         'single_server' => 'Let the user choose the server to receive the reward',
         'ticketdor_tickets' => 'Golden Tickets',
-        'ticketdor_tickets_info' => 'Ticket d\'Or tickets given with this reward. Combine with the reward chances, for example 1% for 1 ticket.',
 
         'commands' => 'The following placeholders are available: :placeholders. The command must not start with <code>/</code>.',
         'monthly' => 'Ranking of users to give this reward to at the end of the month',

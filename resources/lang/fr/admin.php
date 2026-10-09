@@ -75,7 +75,6 @@ return [
         'enable' => 'Activer la récompense',
         'single_server' => 'Laisser l\'utilisateur choisir le serveur pour recevoir la récompense',
         'ticketdor_tickets' => 'Tickets d\'or',
-        'ticketdor_tickets_info' => 'Tickets du Ticket d\'Or donnés avec cette récompense. À combiner avec les chances de la récompense, par exemple 1 % pour 1 ticket.',
 
         'commands' => 'Les variables suivantes sont disponibles : :placeholders. La commande ne doit pas commencer par un <code>/</code>.',
         'monthly' => 'Position du classement des utilisateurs à qui donner cette récompense à la fin du mois',
